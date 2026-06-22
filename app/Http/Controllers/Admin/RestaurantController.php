@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Restaurant;
 use App\Models\Category;
 use App\Models\RegularHoliday;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class RestaurantController extends Controller
 {
@@ -54,12 +55,22 @@ class RestaurantController extends Controller
 
         $restaurant = new Restaurant();
         $restaurant->name = $request->input('name');
+        /*
         if ($request->hasFile('image')) {
             $image = $request->file('image')->store('public/restaurants');
             $restaurant->image = basename($image);
         } else {
             $restaurant->image = '';
         }
+        */
+        // Cloudinaryに対応させるためstoreを書き換え
+        if ($request->hasFile('image')) {
+            $uploadedFileUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
+            $restaurant->image = $uploadedFileUrl;
+        } else {
+            $restaurant->image = '';
+        }
+        // ここまで
         $restaurant->description = $request->input('description');
         $restaurant->lowest_price = $request->input('lowest_price');
         $restaurant->highest_price = $request->input('highest_price');
@@ -105,10 +116,20 @@ class RestaurantController extends Controller
         ]);
 
         $restaurant->name = $request->input('name');
+        /*
         if ($request->hasFile('image')) {
             $image = $request->file('image')->store('public/restaurants');
             $restaurant->image = basename($image);
         }
+        */
+
+        // Cloudinaryに対応させるためupdateを書き換え
+        if ($request->hasFile('image')) {
+            $uploadedFileUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
+            $restaurant->image = $uploadedFileUrl;
+        }
+        // ここまで
+
         $restaurant->description = $request->input('description');
         $restaurant->lowest_price = $request->input('lowest_price');
         $restaurant->highest_price = $request->input('highest_price');

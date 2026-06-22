@@ -46,8 +46,10 @@
                 @endif
 
                 <div class="mb-2">
+                <!-- Cloudinaryに対応させるため書き換え -->
                     @if ($restaurant->image !== '')
-                        <img src="{{ asset('storage/restaurants/' . $restaurant->image) }}" class="w-100">
+                        <!-- <img src="{{ asset('storage/restaurants/' . $restaurant->image) }}" class="w-100"> -->
+                        <img src="{{ $restaurant->image }}" class="w-100">
                     @else
                         <img src="{{ asset('/images/no_image.jpg') }}" class="w-100">
                     @endif
